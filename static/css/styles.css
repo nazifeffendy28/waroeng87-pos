@@ -1,0 +1,37 @@
+:root {
+    --bg-primary: #f0f0f0;
+    --bg-secondary: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --accent-primary: #0078d4;
+    --accent-secondary: #60a5fa;
+    --border-color: #d1d5db;
+}
+
+.dark {
+    --bg-primary: #202020;
+    --bg-secondary: #2d2d2d;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --accent-primary: #60a5fa;
+    --accent-secondary: #3b82f6;
+    --border-color: #374151;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.glow {
+    box-shadow: 0 0 10px rgba(0, 120, 212, 0.3), 0 0 20px rgba(0, 120, 212, 0.2), 0 0 30px rgba(0, 120, 212, 0.1);
+    transition: box-shadow 0.5s ease;
+}
+
+.dark .glow {
+    box-shadow: 0 0 10px rgba(96, 165, 250, 0.3), 0 0 20px rgba(96, 165, 250, 0.2), 0 0 30px rgba(96, 165, 250, 0.1);
+}
+
+/* Add more custom styles here */
