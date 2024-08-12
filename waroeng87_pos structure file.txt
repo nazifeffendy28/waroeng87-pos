@@ -1,0 +1,15 @@
+waroeng87_pos/
+│
+├── templates/
+│   ├── login.html
+│   ├── register.html
+│   ├── forgot_password.html
+│   └── dashboard.html
+│
+├── static/
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       └── main.js
+│
+└── app.pya

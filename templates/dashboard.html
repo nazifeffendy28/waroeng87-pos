@@ -1,35 +1,22 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Waroeng 87 POS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        @media (max-width: 700px) {
-            .desktop-menu {
-                display: none;
-            }
-            .mobile-menu {
-                display: block;
-            }
-        }
-        @media (min-width: 701px) {
-            .desktop-menu {
-                display: flex;
-            }
-            .mobile-menu {
-                display: none;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waroeng 87 POS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </head>
 <body class="h-full">
 <div class="min-h-full">
-  <nav class="bg-gray-800">
+<nav class="bg-gray-800">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between">
+        <div class="flex h-16 items-center justify-between">
+          <nav class="bg-gray-800">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="flex-shrink-0">
             <img class="h-8 w-8" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Waroeng 87">
@@ -57,16 +44,14 @@
                   <p><strong>Email:</strong> {{ email }}</p>
                 </div>
                 <div class="px-4 py-2">
-                  <button id="themeToggle" class="bg-gray-200 dark:bg-gray-600 rounded-full w-12 h-6 transition duration-300 ease-in-out">
-                    <div class="bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out"></div>
-                  </button>
-                </div>
+                  <div id="themeToggle" class="theme-toggle"></div>
+              </div>
                 <a href="#" id="logoutButton" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1">Sign out</a>
               </div>
             </div>
           </div>
         </div>
-        <div class="mobile-menu -mr-2 flex md:hidden">
+        <div class="-mr-2 flex md:hidden">
           <button type="button" class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" aria-controls="mobile-menu
             <span class="sr-only">Open main menu</span>
             <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -123,39 +108,7 @@
   </main>
 </div>
 
-<script>
-  $(document).ready(function() {
-    $('#user-menu-button').click(function() {
-      $('#user-menu').toggleClass('hidden');
-    });
-
-    $('#themeToggle').click(function() {
-      $('html').toggleClass('dark');
-      $.ajax({
-        url: '/toggle-theme',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({theme: $('html').hasClass('dark') ? 'dark' : 'light'}),
-      });
-    });
-
-    $('#logoutButton').click(function(e) {
-      e.preventDefault();
-      $.ajax({
-        url: '/logout',
-        method: 'GET',
-        success: function(response) {
-          if (response.success) {
-            window.location.href = '/login';
-          }
-        }
-      });
-    });
-
-    $('.mobile-menu button').click(function() {
-      $('#mobile-menu').toggleClass('hidden');
-    });
-  });
-</script>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 </html>

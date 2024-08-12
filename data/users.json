@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@admin.com",
+      "hashed_password": "$2b$12$dGm4ZiOj.eFTgkWesp9nR.NVamWcWLt22wCnXse2bJQAlLC4Kwo8O"
+    },
+    {
+      "id": 2,
+      "username": "test",
+      "email": "test@test.com",
+      "hashed_password": "$2b$12$gEneMY0v8KngQGWkdq7EJOS/RkYT2bZcy9zXyfJvLrd5lUCCln8v2"
+    }
+  ]
+}

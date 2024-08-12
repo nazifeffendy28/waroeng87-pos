@@ -1,14 +1,30 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_bcrypt import Bcrypt
 from functools import wraps
+import json
 import os
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 bcrypt = Bcrypt(app)
 
-# This is a simple in-memory user store. In a real application, you'd use a database.
-users = {}
+# Load users from JSON file
+def load_users():
+    with open('data/users.json', 'r') as f:
+        return json.load(f)['users']
+
+# Save users to JSON file
+def save_users(users):
+    with open('data/users.json', 'w') as f:
+        json.dump({'users': users}, f, indent=2)
+
+# Hash passwords for existing users
+users = load_users()
+for user in users:
+    if 'hashed_password' not in user:
+        user['hashed_password'] = bcrypt.generate_password_hash(user['password']).decode('utf-8')
+        del user['password']
+save_users(users)
 
 def login_required(f):
     @wraps(f)
@@ -28,9 +44,10 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = users.get(username)
-        if user and bcrypt.check_password_hash(user['password'], password):
-            session['user_id'] = username
+        users = load_users()
+        user = next((user for user in users if user['username'] == username), None)
+        if user and bcrypt.check_password_hash(user['hashed_password'], password):
+            session['user_id'] = user['id']
             return jsonify({"success": True, "message": "Logged in successfully."})
         else:
             return jsonify({"success": False, "message": "Invalid username or password."})
@@ -42,11 +59,19 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        if username in users:
+        users = load_users()
+        if any(user['username'] == username for user in users):
             return jsonify({"success": False, "message": "Username already exists."})
         else:
             hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            users[username] = {'password': hashed_password, 'email': email}
+            new_user = {
+                'id': max(user['id'] for user in users) + 1,
+                'username': username,
+                'email': email,
+                'hashed_password': hashed_password
+            }
+            users.append(new_user)
+            save_users(users)
             return jsonify({"success": True, "message": "Registered successfully. Please log in."})
     return render_template('register.html')
 
@@ -54,7 +79,8 @@ def register():
 def forgot_password():
     if request.method == 'POST':
         email = request.form['email']
-        user = next((u for u in users if users[u]['email'] == email), None)
+        users = load_users()
+        user = next((u for u in users if u['email'] == email), None)
         if user:
             return jsonify({"success": True, "message": "User found. Please enter a new password."})
         else:
@@ -65,9 +91,11 @@ def forgot_password():
 def reset_password():
     email = request.form['email']
     new_password = request.form['new_password']
-    user = next((u for u in users if users[u]['email'] == email), None)
+    users = load_users()
+    user = next((u for u in users if u['email'] == email), None)
     if user:
-        users[user]['password'] = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        user['hashed_password'] = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        save_users(users)
         return jsonify({"success": True, "message": "Password reset successfully. Please log in."})
     else:
         return jsonify({"success": False, "message": "Email not found."})
@@ -75,8 +103,9 @@ def reset_password():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    user = users[session['user_id']]
-    return render_template('dashboard.html', username=session['user_id'], email=user['email'])
+    users = load_users()
+    user = next((u for u in users if u['id'] == session['user_id']), None)
+    return render_template('dashboard.html', username=user['username'], email=user['email'])
 
 @app.route('/logout')
 def logout():

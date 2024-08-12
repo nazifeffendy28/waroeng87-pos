@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Waroeng 87 POS</title>
+    <title>Waroeng 87 POS</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </head>
 <body class="h-full">
     <div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -16,32 +18,41 @@
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                <form id="registerForm" class="space-y-6">
-                    <div>
-                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                        <div class="mt-1">
-                            <input id="username" name="username" type="text" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                        <div class="mt-1">
-                            <input id="email" name="email" type="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <div class="mt-1">
-                            <input id="password" name="password" type="password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                        </div>
-                    </div>
-
-                    <div>
-                        <button type="submit" class="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Register</button>
-                    </div>
-                </form>
+              <form id="registerForm" class="space-y-6" action="{{ url_for('register') }}" method="POST">
+                <div>
+                  <label for="regUsername" class="block text-sm font-medium text-gray-700">Username</label>
+                  <div class="mt-1">
+                    <input id="regUsername" name="username" type="text" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                </div>
+          
+                <div>
+                  <label for="regEmail" class="block text-sm font-medium text-gray-700">Email address</label>
+                  <div class="mt-1">
+                    <input id="regEmail" name="email" type="email" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                </div>
+          
+                <div>
+                  <label for="regPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                  <div class="mt-1">
+                    <input id="regPassword" name="password" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                </div>
+          
+                <div>
+                  <label for="regConfirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                  <div class="mt-1">
+                    <input id="regConfirmPassword" name="confirmPassword" type="password" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  </div>
+                </div>
+          
+                <div>
+                  <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Register
+                  </button>
+                </div>
+              </form>
 
                 <div class="mt-6">
                     <div class="relative">
@@ -62,40 +73,10 @@
     </div>
 
     <div id="themeToggle" class="fixed top-4 right-4">
-        <button class="bg-gray-200 dark:bg-gray-600 rounded-full w-12 h-6 transition duration-300 ease-in-out">
-            <div class="bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-in-out"></div>
-        </button>
+        <div class="theme-toggle"></div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            $('#registerForm').submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/register',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            alert(response.message);
-                            window.location.href = '/login';
-                        } else {
-                            alert(response.message);
-                        }
-                    }
-                });
-            });
-
-            $('#themeToggle').click(function() {
-                $('html').toggleClass('dark');
-                $.ajax({
-                    url: '/toggle-theme',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({theme: $('html').hasClass('dark') ? 'dark' : 'light'}),
-                });
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 </html>
