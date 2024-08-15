@@ -7,6 +7,7 @@
     --accent-secondary: #00f2fe;
     --border-color: #d1d5db;
     --glow-color: rgba(79, 172, 254, 0.5);
+    --box-bg: #ffffff;
 }
 
 .dark {
@@ -18,6 +19,11 @@
     --accent-secondary: #8e2de2;
     --border-color: #374151;
     --glow-color: rgba(74, 0, 224, 0.5);
+    --box-bg: #1e293b;
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
@@ -25,7 +31,32 @@ body {
     background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
     color: var(--text-primary);
     transition: all 0.3s ease;
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.bg-white {
+    background-color: var(--box-bg);
+}
+
+.dark .bg-white {
+    background-color: var(--box-bg);
+}
+
+.dark input {
+background-color: var(--bg-secondary);
+color: var(--text-primary);
+border-color: var(--border-color);
+}
+
+.dark button {
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark a {
+    color: var(--accent-primary);
 }
 
 .theme-toggle {
@@ -105,5 +136,24 @@ input:focus, button:hover, a:hover {
     }
     .mobile-menu {
         display: none;
+    }
+}
+
+.space-y-8 > * + * {
+    margin-top: 2rem;
+}
+
+/* Ensure the content is centered on larger screens */
+@media (min-width: 640px) {
+    .sm\\:px-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .lg\\:px-8 {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }
