@@ -1,5 +1,8 @@
 waroeng87_pos/
 │
+├── data/
+│   └── users.json
+│
 ├── templates/
 │   ├── login.html
 │   ├── register.html
@@ -12,4 +15,4 @@ waroeng87_pos/
 │   └── js/
 │       └── main.js
 │
-└── app.pya
+└── app.py
