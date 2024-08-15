@@ -42,8 +42,9 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
         users = load_users()
         user = next((user for user in users if user['username'] == username), None)
         if user and bcrypt.check_password_hash(user['hashed_password'], password):
@@ -56,9 +57,9 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        email = request.form['email']
+        username = request.json['username']
+        password = request.json['password']
+        email = request.json['email']
         users = load_users()
         if any(user['username'] == username for user in users):
             return jsonify({"success": False, "message": "Username already exists."})
@@ -75,30 +76,30 @@ def register():
             return jsonify({"success": True, "message": "Registered successfully. Please log in."})
     return render_template('register.html')
 
-@app.route('/forgot-password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form['email']
-        users = load_users()
-        user = next((u for u in users if u['email'] == email), None)
-        if user:
-            return jsonify({"success": True, "message": "User found. Please enter a new password."})
-        else:
-            return jsonify({"success": False, "message": "Email not found."})
-    return render_template('forgot_password.html')
-
-@app.route('/reset-password', methods=['POST'])
-def reset_password():
-    email = request.form['email']
-    new_password = request.form['new_password']
+@app.route('/check-user', methods=['POST'])
+def check_user():
+    email = request.json['username_or_email']
     users = load_users()
     user = next((u for u in users if u['email'] == email), None)
     if user:
-        user['hashed_password'] = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        save_users(users)
-        return jsonify({"success": True, "message": "Password reset successfully. Please log in."})
+        return jsonify({"exists": True})
     else:
-        return jsonify({"success": False, "message": "Email not found."})
+        return jsonify({"exists": False})
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.json['username_or_email']
+        new_password = request.json['new_password']
+        users = load_users()
+        user = next((u for u in users if u['email'] == email), None)
+        if user:
+            user['hashed_password'] = bcrypt.generate_password_hash(new_password).decode('utf-8')
+            save_users(users)
+            return jsonify({"success": True, "message": "Password reset successfully. Please log in."})
+        else:
+            return jsonify({"success": False, "message": "Email not found."})
+    return render_template('forgot_password.html')
 
 @app.route('/dashboard')
 @login_required
