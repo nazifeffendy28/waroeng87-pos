@@ -1,24 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
-    const showRegisterLink = document.getElementById('showRegister');
-    const showForgotPasswordLink = document.getElementById('showForgotPassword');
 
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('username');
-            const password = document.getElementById('password');
-
-            if (!username || !password) {
-                console.error('Username or password input not found');
-                return;
-            }
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
             try {
                 const response = await fetch('/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: username.value, password: password.value }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
                 });
                 
                 if (!response.ok) {
@@ -40,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    const showRegisterLink = document.getElementById('showRegister');
+    const showForgotPasswordLink = document.getElementById('showForgotPassword');
 
     if (showRegisterLink) {
         showRegisterLink.addEventListener('click', (e) => {

@@ -2,7 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const darkModeToggle = document.querySelector('.theme-toggle');
     
     function initTheme() {
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        const userPreference = localStorage.getItem('theme');
+        const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = userPreference || systemPreference;
+
+        if (theme === 'dark') {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
@@ -11,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function toggleTheme() {
         document.documentElement.classList.toggle('dark');
-        localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
     
     initTheme();
