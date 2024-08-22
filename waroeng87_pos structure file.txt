@@ -13,6 +13,11 @@ waroeng87_pos/
 │   ├── css/
 │   │   └── styles.css
 │   └── js/
-│       └── main.js
+│       ├── common.js
+│       ├── dashboard.js
+│       ├── forgot-password.js
+│       ├── login.js
+│       ├── main.js
+│       └── register.js
 │
 └── app.py

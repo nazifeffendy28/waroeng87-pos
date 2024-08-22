@@ -7,24 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-    const darkModeToggle = document.getElementById('darkModeToggle');
     const logoutButton = document.getElementById('logoutButton');
     const userInfoUsername = document.getElementById('userInfoUsername');
     const fpUsernameOrEmail = document.getElementById('fpUsernameOrEmail');
     const newPasswordFields = document.getElementById('newPasswordFields');
     const fpNewPassword = document.getElementById('fpNewPassword');
     const fpConfirmPassword = document.getElementById('fpConfirmPassword');
-
-    let isDarkMode = false;
-
-    function toggleDarkMode() {
-        isDarkMode = !isDarkMode;
-        document.body.classList.toggle('dark', isDarkMode);
-        document.body.style.transition = 'background-color 0.5s ease, color 0.5s ease';
-        darkModeToggle.querySelector('div').style.transform = isDarkMode ? 'translateX(24px)' : '';
-    }
-
-    darkModeToggle.addEventListener('click', toggleDarkMode);
 
     function showPage(pageId) {
         [loginPage, registerPage, forgotPasswordPage, dashboardPage].forEach(page => {
@@ -69,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch('http://localhost:5000/login', {
+            const response = await fetch('/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -100,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/register', {
+            const response = await fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
@@ -118,12 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-        let fpStep = 1;
+    let fpStep = 1;
 
     fpUsernameOrEmail.addEventListener('blur', async () => {
         if (fpUsernameOrEmail.value) {
             try {
-                const response = await fetch('http://localhost:5000/check-user', {
+                const response = await fetch('/check-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username_or_email: fpUsernameOrEmail.value }),
@@ -145,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     forgotPasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (fpStep === 1) {
-            // This shouldn't happen as the form should not be submittable in step 1
             alert('Please enter a valid username or email first.');
             return;
         }
@@ -159,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         try {
-            const response = await fetch('http://localhost:5000/forgot-password', {
+            const response = await fetch('/forgot-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -182,35 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('An error occurred. Please try again.');
         }
     });
-    
 
     logoutButton.addEventListener('click', () => {
         showPage('loginPage');
         loginForm.reset();
         registerForm.reset();
         forgotPasswordForm.reset();
-    });
-
-    // Show new password fields in forgot password form
-    document.getElementById('fpUsernameOrEmail').addEventListener('blur', async () => {
-        const usernameOrEmail = document.getElementById('fpUsernameOrEmail').value;
-        if (usernameOrEmail) {
-            try {
-                const response = await fetch('http://localhost:5000/check-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username_or_email: usernameOrEmail }),
-                });
-                const data = await response.json();
-                if (data.exists) {
-                    document.getElementById('newPasswordFields').classList.remove('hidden');
-                } else {
-                    alert('User not found');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred. Please try again.');
-            }
-        }
     });
 });
